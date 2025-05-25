@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Employee Details</title>
+</head>
+<body>
+  <h2>Enter Your Details</h2>
+  <input type="text" id="username" placeholder="Username"><br>
+  <input type="text" id="empid" placeholder="Employee ID"><br>
+  <input type="number" id="age" placeholder="Age"><br>
+  <input type="text" id="section" placeholder="Section"><br>
+  <input type="text" id="gender" placeholder="Gender"><br>
+  <button onclick="saveDetails()">Submit</button>
+
+  <hr>
+
+  <h2>Check My Details</h2>
+  <input type="text" id="searchId" placeholder="Enter Employee ID"><br>
+  <button onclick="fetchDetails()">Get My Details</button>
+
+  <pre id="result"></pre>
+
+  <script>
+    async function saveDetails() {
+      const data = {
+        username: document.getElementById('username').value,
+        empid: document.getElementById('empid').value,
+        age: document.getElementById('age').value,
+        section: document.getElementById('section').value,
+        gender: document.getElementById('gender').value,
+      };
+
+      const res = await fetch('http://localhost:3000/api/save', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+
+      const result = await res.json();
+      alert(result.message || result.error);
+    }
+
+    async function fetchDetails() {
+      const empid = document.getElementById('searchId').value;
+
+      const res = await fetch(`http://localhost:3000/api/user/${empid}`);
+      const result = await res.json();
+
+      document.getElementById('result').textContent = JSON.stringify(result, null, 2);
+    }
+  </script>
+</body>
+</html>
